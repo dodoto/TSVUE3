@@ -1,0 +1,21 @@
+.ripple-wrapper {
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  padding: 0
+}
+
+.ripple {
+  background-color: rgba(0,0,0,0.15);
+  position: absolute;
+  border-radius: 100%;
+  pointer-events: none;
+  transform: scale(0);
+  opacity: 1;
+}
+
+.ripple-active {
+  opacity: 0;
+  transform: scale(2);
+  transition: opacity 1.2s ease-in, transform 0.6s ease-in;
+}
