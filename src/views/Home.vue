@@ -13,7 +13,7 @@
 import HelloWorld from '@/components/HelloWorld.vue'
 import Switch from '@/components/Switch.vue'
 import StarRate from '@/components/StarRate.vue'
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 
 export default defineComponent( {
@@ -32,10 +32,14 @@ export default defineComponent( {
       return store.state.todos.length
     })
 
-    const toggle = (value:boolean):void => {
+    const toggle = async(value:boolean):Promise<any> => {
       isChecked.value = value
       if(value) {
-        store.commit('ADDTODO')
+        // store.commit('ADDTODO')
+        console.log('start loading')
+        const res = await store.dispatch('addTodo')
+        console.log(res)
+        console.log('end loading')
         console.log(store.state)
       }else{
         store.commit('DELETETODO')
@@ -46,6 +50,10 @@ export default defineComponent( {
     const rateChange = (value:string):void => {
       alert(`当前评分${value}`)
     }
+
+    onMounted(() => {
+      toggle(true)
+    })
 
     return {
       isChecked,

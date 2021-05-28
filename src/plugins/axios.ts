@@ -8,9 +8,22 @@ import axios, { AxiosInstance } from 'axios'
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
+const env = process.env.NODE_ENV
+
+// let baseURL: string = 'xxxxxxxx'
+// if(env === 'production') {
+//   baseURL = 'xxxx'
+// }
+
+const CANCEL_TOEKN = axios.CancelToken
+
 const config = {
-  // baseURL: process.env.baseURL || process.env.apiUrl || ""
-  // timeout: 60 * 1000, // Timeout
+  baseURL: process.env.BASE_URL,
+  headers: {
+    appKey: 'Ct9d2WkCAIytagLB'
+  },
+  timeout: 10 * 1000, // Timeout
+  //cancelToken: new CANCEL_TOEKN(c => console.log(c))   //里面的c是该请求的cancel函数,执行后进入请求的error
   // withCredentials: true, // Check cross-site Access-Control
 };
 
@@ -38,6 +51,24 @@ _axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+/**GET */
+export function GET(url:string,params?:object) {
+  return new Promise((resolve,reject) => {
+    _axios.get(url,params)
+    .then(res => resolve(res.data))
+    .catch(err => reject(err))
+  })
+}
+
+/**POST */
+export function POST(url:string,data?:object) {
+  return new Promise((resolve,reject) => {
+    _axios.post(url,data)
+    .then(res => resolve(res))
+    .catch(err => reject(err))
+  })
+}
 
 const axiosPlugin = {
   install:(app: App): void => {

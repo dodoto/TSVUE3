@@ -7,7 +7,7 @@
           name="rating"
           :id="`rate${rate.value}`" 
           :value="rate.value" 
-          :checked="props.value === rate.value" 
+          :checked="value === rate.value" 
           :disabled="disable"
           :class="!disable && 'rating'"
         >
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, toRefs } from 'vue'
 
 export default defineComponent({
   emits: ['change'],
@@ -49,7 +49,7 @@ export default defineComponent({
 
     return {
       rateArray,
-      props,
+      ...toRefs(props),
       disable,
       change
     }

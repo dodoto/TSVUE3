@@ -1,6 +1,7 @@
 import './index.css'
 
 import DirectiveInterface from '../DirectiveInterface'
+import { App } from 'vue';
 
 const ripple:DirectiveInterface = {
   name: 'ripple',
@@ -53,6 +54,10 @@ const ripple:DirectiveInterface = {
   }  
 }
 
-export default ripple
+export default {
+  install: (app:App):void => {
+    app.directive(ripple.name,ripple.config)
+  }
+}
 
 // js 默认对象不包含 迭代器, 如有需要自行添加

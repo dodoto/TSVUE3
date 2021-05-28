@@ -1,3 +1,4 @@
+import { App } from 'vue'
 import DirectiveInterface from '../DirectiveInterface'
 
 const drag:DirectiveInterface = {
@@ -11,8 +12,6 @@ const drag:DirectiveInterface = {
         const beginY = clientY - y
         let offsetX:number = 0, offsetY:number = 0; 
         const { offsetLeft:left, offsetTop:top, clientWidth:width, clientHeight:height } = el
-        const { innerWidth, innerHeight } = window
-        console.log(left)
         const boundary = {
           left: -left,
           right: innerWidth - width - left,
@@ -30,7 +29,6 @@ const drag:DirectiveInterface = {
           el.style.transform = `translate(${offsetX}px,${offsetY}px)`
         }
         document.onmouseup = () => {
-          console.log(boundary)
           x = offsetX
           y = offsetY
           document.onmousemove = null
@@ -62,4 +60,8 @@ const drag:DirectiveInterface = {
   }  
 }
 
-export default drag
+export default {
+  install: (app:App):void => {
+    app.directive(drag.name,drag.config)
+  }
+}

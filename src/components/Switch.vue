@@ -2,19 +2,19 @@
   <input 
     type="checkbox" 
     @change="valueChange"
-    :checked="props.value" 
-    :style="{backgroundColor:props.color}"
+    :checked="value" 
+    :style="{backgroundColor:color}"
   >
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext } from 'vue'
+import { defineComponent, SetupContext, toRefs } from 'vue'
 
 export default defineComponent({
   props: {
     value: {
       type: Boolean,
-      required: true
+      default: false
     },
     color: {
       type: String,
@@ -27,14 +27,13 @@ export default defineComponent({
     ctx:SetupContext
   ) 
   {
-
     const valueChange = ():void => {
       const value = !props.value
       ctx.emit('change',value)
     }
 
     return {
-      props,
+      ...toRefs(props),
       valueChange
     }
   },
@@ -44,6 +43,8 @@ export default defineComponent({
 <style scoped>
 input {
   appearance: none;
+  border-width: 0;
+  outline-width: 0;
   display: inline-block;
   width: 56px;
   height: 30px;
