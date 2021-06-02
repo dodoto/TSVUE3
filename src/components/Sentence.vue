@@ -25,8 +25,6 @@ export default defineComponent({
 
     const sentence = ref('')
 
-    const wallpaperUrl = ref('')
-
     const instance = getCurrentInstance()
 
     // const axios = instance.ctx.$axios  // ctx 仅存在于开发环境
@@ -35,7 +33,7 @@ export default defineComponent({
 
     const scrollDown = () => {
       window.scrollTo({
-        top: height,
+        top: height.value,
         behavior: 'smooth'
       })
     }
@@ -46,7 +44,6 @@ export default defineComponent({
 
     return {
       sentence,
-      wallpaperUrl,
       height,
       ...toRefs(props),
       scrollDown

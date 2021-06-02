@@ -18,7 +18,10 @@ const routes: Array<RouteRecordRaw> = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    meta: {
+      title: 'xxxx'
+    }
   },
   {
     path: '/todo',
@@ -34,10 +37,13 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/seller-detail/:id+',
+    path: '/seller-detail/:id?',
     props: true,
     name: 'SellerDetail',
-    component: () => import(/* webpackChunkName: "seller-detail" */'../views/SellerDetail.vue')
+    component: () => import(/* webpackChunkName: "seller-detail" */'../views/SellerDetail.vue'),
+    meta: {
+      title: ''
+    }
   },
   {
     path: '/:w+',
@@ -62,7 +68,8 @@ router.beforeEach((to,from,next) => {
 })
 
 router.afterEach((to, from, failure) => {
-  document.title = to.name as string
+  const title = to.meta.title || to.name
+  document.title = title as string
   // console.log(failure)
 })
 

@@ -1,12 +1,12 @@
 <template>
   <div class="seller-item" :title="title">
-    <div class="error-block" v-if="isLoadError">图片获取失败</div>
+    <ImgErrBlock v-if="isLoadError" :width="150" :height="225"/>
     <img :src="imgUrl" :alt="title" @error="imgLoadError" v-else/>
     <p>{{title}}</p>
     <p>{{author}}</p>
     <p>{{fav_nums}}</p>
     <div class="btn-group">
-      <button>
+      <button @click.stop="goToDetail">
         <i class="fa fa-info"></i> 详情
       </button>
       <button @click.stop="clickHandler">
@@ -17,8 +17,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, ref, PropType } from 'vue'
+import { defineComponent, toRefs, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import ImgErrBlock from 'components/ImgErrBlock.vue'
 
 export default defineComponent({
   emits: ['detail','delete'],
@@ -38,8 +39,12 @@ export default defineComponent({
     },
     id: {
       type: Number ,
-      default: 0
+      default: 0,
+      require: true
     }
+  },
+  components: {
+    ImgErrBlock
   },
   setup(props,ctx) {
 
@@ -47,7 +52,7 @@ export default defineComponent({
 
     const isLoadError = ref(false)
 
-    const navigate = () => router.push({name:'SellerDetail',params:{id:props.id}})
+    const goToDetail = () => router.push({name:'SellerDetail',params:{id:props.id}})
 
     const imgLoadError = () => isLoadError.value = true
 
@@ -57,7 +62,8 @@ export default defineComponent({
       ...toRefs(props),
       clickHandler,
       isLoadError,
-      imgLoadError
+      imgLoadError,
+      goToDetail
     }
   },
 })
@@ -67,22 +73,12 @@ export default defineComponent({
 .seller-item {
   text-align: center;
   margin: 10px;
-  padding: 10px;
+  padding: 6px;
   background-color: #fff;
   box-shadow: 0 2px 10px rgba(10, 16, 20, .24);
   transition: all .5s;
   position: relative;
   overflow: hidden;
-}
-.error-block {
-  width: 150px;
-  height: 225px;
-  line-height: 150px;
-  margin: auto;
-  background-color: #E9EEF3;
-  color: #333;
-  font-size: 12px;
-  box-shadow: 0 0 2px rgba(10, 16, 20, .12);
 }
 .seller-item > img {
   width: 150px;
@@ -115,7 +111,7 @@ export default defineComponent({
   appearance: none;
   outline-width: 0;
   border-width: 0;
-  background-color: rgba(125, 125, 125, .4);
+  background-color: rgba(44, 62, 80, .4);
   width: 50%;
   height: 100%;
   line-height: 100%;
@@ -124,7 +120,7 @@ export default defineComponent({
 }
 .btn-group > button:hover {
   color: #fff;
-  background-color: rgba(150, 150, 150, .4);
+  background-color: rgba(70, 88, 106, .4);
 }
 </style>
 

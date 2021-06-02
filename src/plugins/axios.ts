@@ -54,19 +54,19 @@ _axios.interceptors.response.use(
 
 /**GET */
 export function GET(url:string,params?:object) {
-  return new Promise((resolve,reject) => {
+  return new Promise<any>((resolve,reject) => {
     _axios.get(url,params)
-    .then(res => resolve(res.data))
-    .catch(err => reject(err))
+    .then((res) => resolve(res.data))
+    .catch((err) => reject(err))
   })
 }
 
 /**POST */
 export function POST(url:string,data?:object) {
-  return new Promise((resolve,reject) => {
+  return new Promise<any>((resolve,reject):any => {
     _axios.post(url,data)
-    .then(res => resolve(res))
-    .catch(err => reject(err))
+    .then((res:any) => resolve(res))
+    .catch((err:any) => reject(err))
   })
 }
 

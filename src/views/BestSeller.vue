@@ -42,8 +42,8 @@ export default defineComponent({
     const getBestSeller = () => {
       const url = '/best-seller/book/hot_list'
       GET(url)
-      .then(res => {
-        bestSellerList.value = res as BestSellerList  // 没有定义过res 所以是 unknow
+      .then((res:BestSellerList) => {
+        bestSellerList.value = res
       })
       .catch(err => {
         console.log(err)
@@ -76,11 +76,14 @@ export default defineComponent({
 
 <style scoped>
 .best-seller {
-  background-color: silver;
+  background-color: #2c3e50;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
   position: inherit;
+  height: 100vh;
+  overflow: auto;
 }
 .best-seller > i {
   width: 170px;
