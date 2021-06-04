@@ -58,10 +58,9 @@ export default defineComponent({
     }
 
     const beforeLeave = (el:HTMLElement) => {
-      //10 是 margin
       const { left, top } = el.getBoundingClientRect()
-      el.style.left = `${left-10}px`
-      el.style.top = `${top-10}px`
+      el.style.left = `${left - 10}px`
+      el.style.top = `${top - 20}px`
     }
 
     onMounted(getBestSeller)
