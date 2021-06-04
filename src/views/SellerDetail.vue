@@ -1,7 +1,22 @@
 <template>
   <div class="seller-detail">
     <div class="seller-detail-banner">
-      <h1>图书详情</h1>
+      <h1>
+        <span>{{showSearch ? '搜索' : '图书详情'}}</span>
+        <div class="search" :class="showSearch && 'search-actived'">
+          <transition name="scaleX">
+            <input 
+              placeholder="不想搞接口了,写id吧"
+              :ref="setInputRef" 
+              v-show="showSearch" 
+              @blur="showSearch = false" 
+              :spellcheck="false" 
+              @keyup.enter="search"
+            />
+          </transition>
+          <button class="fa fa-search" @mousedown="handleInput"/>
+        </div>
+      </h1>
     </div>
     <div class="seller-detail-content">
       <div class="seller-detail-image">
@@ -22,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watchEffect, Ref } from 'vue'
+import { computed, defineComponent, ref, watchEffect, Ref, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { GET } from '@/plugins/axios'
 import Loading from 'components/Loading.vue'
@@ -77,6 +92,10 @@ export default defineComponent({
 
     const isImgLoadError = ref(false)                            //是否图片加载错误
 
+    const showSearch = ref(false)
+
+    const inputRef = ref()
+
     const router = useRouter()
 
     const renderDetail = computed(() => {                        //要渲染出来的详情
@@ -123,6 +142,25 @@ export default defineComponent({
       isImgLoadError.value = true
     }
 
+    const setInputRef = (el:HTMLElement) => inputRef.value = el
+
+    const handleInput = () => {
+      showSearch.value = !showSearch.value
+      if(showSearch.value) {
+        setTimeout(() => {
+          inputRef.value.focus()
+        },0)
+      }
+    }
+
+    const search = () => {
+      const input = inputRef.value
+      const id = input.value
+      showSearch.value = false
+      input.value = ''
+      router.push({name:'SellerDetail',params:{id}})
+    }
+
     watchEffect(getSellerDetail)
 
     return {
@@ -131,7 +169,11 @@ export default defineComponent({
       showErrorBlock,
       isImgLoadError,
       imgLoadError,
-      renderDetail
+      renderDetail,
+      showSearch,
+      setInputRef,
+      handleInput,
+      search
     }
   },
 })
@@ -151,6 +193,58 @@ export default defineComponent({
   color: #fff;
   line-height: 120px;
 }
+
+.search {
+  float:right;
+  border-radius: 50px;
+  height: 40px;
+  margin-top: 40px;
+  margin-left: -100%;
+  line-height: 40px;
+  background-color: transparent;
+  padding: 2px;
+  overflow: hidden;
+}
+
+.search-actived {
+  background-color: #36485a;
+}
+
+.search:hover {
+  background-color: #36485a;
+}
+
+.search > button, .search > input {
+  outline-width: 0;
+  border-width: 0;
+  background-color: transparent;
+  vertical-align: top;
+  height: 40px;
+}
+
+.search > input {
+  padding-left: 10px;
+  color: #fff;
+  font-weight: 500;
+}
+
+.search > input::placeholder {
+  color: #ccc;
+}
+
+.search > input:focus + button::before{
+  content: "\f00d";
+}
+
+.search > button {
+  appearance: none;
+  color:#fff;
+  cursor: pointer;
+  font-size: 22px;
+  width: 40px; 
+  border-radius: 50%;
+}
+
 .seller-detail-content {
   width: 900px;
   margin: 50px auto;
@@ -194,5 +288,18 @@ export default defineComponent({
     width: 100%;
     padding-right: 20px;
   }
+}
+
+.scaleX-enter-active {
+  animation: widthAnimate 0.5s;
+}
+
+.scaleX-leave-active {
+  animation: widthAnimate 0.5s reverse;
+}
+
+@keyframes widthAnimate {
+  from { width: 0; opacity: 0 }
+  to { width: 169px; opacity: 1 }
 }
 </style>

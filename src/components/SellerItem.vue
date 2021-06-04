@@ -4,7 +4,7 @@
     <img :src="imgUrl" :alt="title" @error="imgLoadError" v-else/>
     <p>{{title}}</p>
     <p>{{author}}</p>
-    <p>{{fav_nums}}</p>
+    <!-- <p>{{fav_nums}}</p> -->
     <div class="btn-group">
       <button @click.stop="goToDetail">
         <i class="fa fa-info"></i> 详情
@@ -72,7 +72,7 @@ export default defineComponent({
 <style scoped>
 .seller-item {
   text-align: center;
-  margin: 10px;
+  margin: 20px 10px 0 10px;
   padding: 6px;
   background-color: #fff;
   box-shadow: 0 2px 10px rgba(10, 16, 20, .24);
