@@ -68,7 +68,6 @@
     "not dead"
   ],
   "lint-staged": {
-    "*.js": "eslint --cache --fix",
     "*.{js,css,md,ts,vue}": "prettier --write"
   }
 }
