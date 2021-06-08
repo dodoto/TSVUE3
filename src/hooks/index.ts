@@ -1,26 +1,43 @@
-import { ref, Ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, Ref, onMounted, onBeforeUnmount } from "vue";
 
-export function useWindowHeight():Ref<number> {
+export function useWindowHeight(): Ref<number> {
+  const initHeight = window.innerHeight;
 
-  const initHeight = window.innerHeight
+  const height = ref(initHeight);
 
-  const height = ref(initHeight)
-
-  const handleSizeChange = ():void => {
-    height.value = window.innerHeight
-  }
+  const handleSizeChange = (): void => {
+    height.value = window.innerHeight;
+  };
 
   const addListener = () => {
-    window.addEventListener('resize',handleSizeChange)
-  }
+    window.addEventListener("resize", handleSizeChange);
+  };
 
   const removeListener = () => {
-    window.removeEventListener('resize',handleSizeChange)
-  }
+    window.removeEventListener("resize", handleSizeChange);
+  };
 
-  onMounted(addListener)
+  onMounted(addListener);
 
-  onBeforeUnmount(removeListener)
+  onBeforeUnmount(removeListener);
 
-  return height
+  return height;
 }
+
+type CallBack = () => void;
+
+export const useRequestAnimationFrameThrottle = (
+  callback: CallBack
+): CallBack => {
+  let lock = false;
+  return function () {
+    if (lock === false) {
+      console.log(124);
+      lock = true;
+      requestAnimationFrame(() => {
+        callback();
+        lock = false;
+      });
+    }
+  };
+};

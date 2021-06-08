@@ -5,7 +5,29 @@
       {{ title }}
     </option>
   </select>
-  <div class="drag-table" @scroll="handleScroll" :ref="getTableBoxEl">
+  <Switch :value="isFixedHead" @change="handleChange" />
+  <div class="fixed-table" @scroll="handleScroll" :ref="getTableBoxEl">
+    <!-- 固定头 -->
+    <div
+      class="fixed-head"
+      v-if="isFixedHead"
+      :style="{
+        transform: `translate3D(0,${fixedHeadTransformTop}px,0)`,
+      }"
+    >
+      <table>
+        <colgroup>
+          <col
+            v-for="(title, index) of titles"
+            :key="title"
+            :width="ColumnWidths[index]"
+          />
+          <!-- 隐形col,当内容宽度小于实际宽度时,接收剩余的宽度 -->
+          <col />
+        </colgroup>
+        <th v-for="title of titles" :key="title">{{ title }}</th>
+      </table>
+    </div>
     <!-- 固定列 -->
     <div
       class="fixed-column"
@@ -27,8 +49,20 @@
         </tbody>
       </table>
     </div>
-    <!-- 固定头 -->
-    <div class="fixed-head" v-if="false">
+    <!-- 固定头和列相交的单元格 -->
+    <th
+      class="cross-cell"
+      v-if="isFixedHead && fixedField !== ''"
+      :style="{
+        left: `${fixedColumnLeft}px`,
+        width: `${ColumnWidths[0]}px`,
+        transform: `translate3D(${fixedColumnTransformLeft}px,${fixedHeadTransformTop}px,0)`,
+      }"
+    >
+      {{ fixedField }}
+    </th>
+    <!-- 实际表内容 -->
+    <div>
       <table>
         <colgroup>
           <col
@@ -42,34 +76,24 @@
         <thead>
           <th v-for="title of titles" :key="title">{{ title }}</th>
         </thead>
+        <tbody>
+          <tr v-for="item of data" :key="item.id">
+            <td v-for="title of titles" :key="title">{{ item[title] }}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
-    <!-- 实际表内容 -->
-    <table>
-      <colgroup>
-        <col
-          v-for="(title, index) of titles"
-          :key="title"
-          :width="ColumnWidths[index]"
-        />
-        <!-- 隐形col,当内容宽度小于实际宽度时,接收剩余的宽度 -->
-        <col />
-      </colgroup>
-      <thead>
-        <th v-for="title of titles" :key="title">{{ title }}</th>
-      </thead>
-      <tbody>
-        <tr v-for="item of data" :key="item.id">
-          <td v-for="title of titles" :key="title">{{ item[title] }}</td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref, watchEffect } from "vue";
 import { GET } from "@/plugins/axios";
+import Switch from "@/components/Switch.vue";
+
+// console.log(Test)
+
+type Timer = undefined | number;
 
 interface TableDataItem {
   [key: string]: any;
@@ -78,6 +102,9 @@ interface TableDataItem {
 type TableData = TableDataItem[];
 
 export default defineComponent({
+  components: {
+    Switch,
+  },
   setup() {
     let TableBoxEl: HTMLElement;
 
@@ -86,6 +113,10 @@ export default defineComponent({
     const data = ref<TableData>([]);
 
     const fixedField = ref<string>("");
+
+    const isFixedHead = ref<boolean>(false);
+
+    const fixedHeadTransformTop = ref<number>(0);
 
     const fixedColumnTransformLeft = ref<number>(0);
 
@@ -107,7 +138,7 @@ export default defineComponent({
     const fixedColumnWidth = computed(() => {
       const widths = ColumnWidths.value;
       const index = fixedColumnIndex.value;
-      return widths[index] + 1;
+      return widths[index];
     });
 
     const fixedColumnLeft = computed(() => {
@@ -148,13 +179,27 @@ export default defineComponent({
 
     const getTableBoxEl = (ref: HTMLElement) => (TableBoxEl = ref);
 
-    const handleScroll = () => {
+    const handleScrollX = () => {
+      const scrollLeft = TableBoxEl?.scrollLeft;
       if (fixedField.value !== "") {
-        const scrollLeft = TableBoxEl.scrollLeft;
         const offsetLeft = scrollLeft - fixedColumnLeft.value;
-        fixedColumnTransformLeft.value = Math.max(offsetLeft, 0);
+        fixedColumnTransformLeft.value = Math.max(0, offsetLeft);
       }
     };
+
+    const handleScrollY = () => {
+      const scrollTop = TableBoxEl?.scrollTop;
+      if (isFixedHead.value) {
+        fixedHeadTransformTop.value = scrollTop;
+      }
+    };
+
+    const handleScroll = () => {
+      handleScrollX();
+      handleScrollY();
+    };
+
+    const handleChange = (value: boolean) => (isFixedHead.value = value);
 
     watchEffect(handleScroll);
 
@@ -163,15 +208,18 @@ export default defineComponent({
     return {
       data, //表格数据
       titles, //表格头
+      isFixedHead, //是否固定表头
       fixedField, //固定字段
       fixedColumnIndex, //固定列下标
       fixedColumnData, //固定列数据
       fixedColumnLeft, //固定列x坐标
       fixedColumnWidth, //固定列宽度
       fixedColumnTransformLeft, //固定列x轴偏移量
+      fixedHeadTransformTop, //固定头y轴偏移量
       ColumnWidths, //单元格宽度集合
       handleSelect, //选择处理函数
-      handleScroll, //滚动处理函数
+      handleScroll, //轴滚动处理函数
+      handleChange, //选中处理函数
       getTableBoxEl,
     };
   },
@@ -179,8 +227,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.drag-table {
-  width: 800px;
+.fixed-table {
+  width: 400px;
+  height: 400px;
   margin: 100px auto;
   overflow: auto;
   text-align: left;
@@ -191,23 +240,37 @@ export default defineComponent({
 .fixed-head {
   position: absolute;
   top: 0;
+  left: 0;
+  box-shadow: 0 0px 5px -10px rgba(0, 0, 0, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.3);
 }
-.fixed-column {
-  background-color: turquoise;
-  box-shadow: 0 2px 10px rgba(10, 16, 20, 0.48), 0 0 2px rgba(10, 16, 20, 0.24);
+.fixed-head {
+  left: 0;
 }
+
 table {
   border-collapse: collapse;
-  table-layout: fixed;
+  table-layout: absolute;
   width: 100%;
+  background-color: #ecf5ff;
 }
-.drag-table > table {
-  border: 1px solid slategray;
+.cross-cell {
+  position: absolute;
+  top: 0;
+  background-color: #ecf5ff;
+  box-sizing: border-box;
+  line-height: 40px;
 }
 th,
-td {
-  height: 40px;
+td,
+.cross-cell {
+  line-height: 40px;
   padding-left: 20px;
-  border: 1px solid slategray;
+  /* border: 1px solid slategray; */
+}
+tr:nth-child(even) {
+  background-color: #ecf5ff;
+}
+tr:nth-child(odd) {
+  background-color: #d9ecff;
 }
 </style>
