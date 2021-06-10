@@ -7,9 +7,6 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "Home",
     component: Home,
-    meta: {
-      requireTest: true,
-    },
   },
   {
     path: "/about",
@@ -73,11 +70,11 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   // console.log(to)     // 去哪个路由
   // console.log(from)   // 从哪个路由
-  if (to.meta.requireTest) {
-    next({ path: "/404" });
-  } else {
-    next();
-  }
+  // if (to.meta.requireTest) {
+  //   next({ path: "/404" });
+  // } else {
+  next();
+  // }
 });
 
 router.afterEach((to, from, failure) => {

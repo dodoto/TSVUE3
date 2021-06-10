@@ -39,9 +39,7 @@
       }"
     >
       <table>
-        <thead>
-          <th>{{ fixedField }}</th>
-        </thead>
+        <th>{{ fixedField }}</th>
         <tbody>
           <tr v-for="(column, index) of fixedColumnData" :key="index">
             <td>{{ column }}</td>
@@ -87,19 +85,21 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, watchEffect } from "vue";
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  reactive,
+  ref,
+  watchEffect,
+} from "vue";
 import { GET } from "@/plugins/axios";
 import Switch from "@/components/Switch.vue";
-
-// console.log(Test)
-
-type Timer = undefined | number;
+import { useRefArray } from "@/hooks/index";
 
 interface TableDataItem {
   [key: string]: any;
 }
-
-type TableData = TableDataItem[];
 
 export default defineComponent({
   components: {
@@ -108,17 +108,17 @@ export default defineComponent({
   setup() {
     let TableBoxEl: HTMLElement;
 
-    const ColumnWidths = ref<number[]>([]);
+    const ColumnWidths = useRefArray<number>();
 
-    const data = ref<TableData>([]);
+    const data = useRefArray<TableDataItem>();
 
-    const fixedField = ref<string>("");
+    const fixedField = ref("");
 
-    const isFixedHead = ref<boolean>(false);
+    const isFixedHead = ref(false);
 
-    const fixedHeadTransformTop = ref<number>(0);
+    const fixedHeadTransformTop = ref(0);
 
-    const fixedColumnTransformLeft = ref<number>(0);
+    const fixedColumnTransformLeft = ref(0);
 
     const titles = computed(() => {
       const item = data.value[0];
@@ -241,7 +241,8 @@ export default defineComponent({
   position: absolute;
   top: 0;
   left: 0;
-  box-shadow: 0 0px 5px -10px rgba(0, 0, 0, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0px 5px -10px rgba(0, 0, 0, 0.3),
+    0 -2px 4px 0 rgba(0, 0, 0, 0.3);
 }
 .fixed-head {
   left: 0;
@@ -249,7 +250,7 @@ export default defineComponent({
 
 table {
   border-collapse: collapse;
-  table-layout: absolute;
+  table-layout: fixed;
   width: 100%;
   background-color: #ecf5ff;
 }

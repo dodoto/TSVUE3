@@ -1,14 +1,12 @@
 <template>
   <div class="seller-item" :title="title">
-    <ImgErrBlock v-if="isLoadError" :width="150" :height="225"/>
-    <img :src="imgUrl" :alt="title" @error="imgLoadError" v-else/>
-    <p>{{title}}</p>
-    <p>{{author}}</p>
+    <ImgErrBlock v-if="isLoadError" :width="150" :height="225" />
+    <img :src="imgUrl" :alt="title" @error="imgLoadError" v-else />
+    <p>{{ title }}</p>
+    <p>{{ author }}</p>
     <!-- <p>{{fav_nums}}</p> -->
     <div class="btn-group">
-      <button @click.stop="goToDetail">
-        <i class="fa fa-info"></i> 详情
-      </button>
+      <button @click.stop="goToDetail"><i class="fa fa-info"></i> 详情</button>
       <button @click.stop="clickHandler">
         <i class="fa fa-trash-o"></i> 删除
       </button>
@@ -17,56 +15,56 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import ImgErrBlock from 'components/ImgErrBlock.vue'
+import { defineComponent, toRefs, ref } from "vue";
+import { useRouter } from "vue-router";
+import ImgErrBlock from "./ImgErrBlock.vue";
 
 export default defineComponent({
-  emits: ['detail','delete'],
+  emits: ["detail", "delete"],
   props: {
     imgUrl: {
       type: String,
-      default: '@/assets/logo.png'
+      default: "@/assets/logo.png",
     },
     title: String,
     author: {
       type: String,
-      default: '佚名'
+      default: "佚名",
     },
     fav_nums: {
       type: Number,
-      default: 0
+      default: 0,
     },
     id: {
-      type: Number ,
+      type: Number,
       default: 0,
-      require: true
-    }
+      require: true,
+    },
   },
   components: {
-    ImgErrBlock
+    ImgErrBlock,
   },
-  setup(props,ctx) {
+  setup(props, ctx) {
+    const router = useRouter();
 
-    const router = useRouter()
+    const isLoadError = ref(false);
 
-    const isLoadError = ref(false)
+    const goToDetail = () =>
+      router.push({ name: "SellerDetail", params: { id: props.id } });
 
-    const goToDetail = () => router.push({name:'SellerDetail',params:{id:props.id}})
+    const imgLoadError = () => (isLoadError.value = true);
 
-    const imgLoadError = () => isLoadError.value = true
-
-    const clickHandler = () => ctx.emit('delete',props.id)
+    const clickHandler = () => ctx.emit("delete", props.id);
 
     return {
       ...toRefs(props),
       clickHandler,
       isLoadError,
       imgLoadError,
-      goToDetail
-    }
+      goToDetail,
+    };
   },
-})
+});
 </script>
 
 <style scoped>
@@ -75,8 +73,8 @@ export default defineComponent({
   margin: 20px 10px 0 10px;
   padding: 6px;
   background-color: #fff;
-  box-shadow: 0 2px 10px rgba(10, 16, 20, .24);
-  transition: all .5s;
+  box-shadow: 0 2px 10px rgba(10, 16, 20, 0.24);
+  transition: all 0.5s;
   position: relative;
   overflow: hidden;
 }
@@ -85,7 +83,7 @@ export default defineComponent({
   height: 225px;
   object-fit: cover;
   vertical-align: top;
-  box-shadow: 0 0 2px rgba(10, 16, 20, .12);
+  box-shadow: 0 0 2px rgba(10, 16, 20, 0.12);
 }
 .seller-item > p {
   line-height: 30px;
@@ -97,7 +95,8 @@ export default defineComponent({
 }
 .btn-group {
   position: absolute;
-  left: 0; bottom: 0;
+  left: 0;
+  bottom: 0;
   transform: translateY(100%);
   width: 100%;
   height: 30px;
@@ -111,7 +110,7 @@ export default defineComponent({
   appearance: none;
   outline-width: 0;
   border-width: 0;
-  background-color: rgba(44, 62, 80, .4);
+  background-color: rgba(44, 62, 80, 0.4);
   width: 50%;
   height: 100%;
   line-height: 100%;
@@ -120,8 +119,6 @@ export default defineComponent({
 }
 .btn-group > button:hover {
   color: #fff;
-  background-color: rgba(70, 88, 106, .4);
+  background-color: rgba(70, 88, 106, 0.4);
 }
 </style>
-
-

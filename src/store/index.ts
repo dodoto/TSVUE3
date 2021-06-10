@@ -1,47 +1,46 @@
-import { createStore } from 'vuex'
+import { createStore } from "vuex";
 
 interface TestState {
-  todos: number[]
+  todos: number[];
 }
 
-function delay():any {
-  return new Promise((resolve,reject) => {
-    setTimeout(function() {
-      console.log('resolve')
-      resolve(1)
-    },2000)
-  })
+function delay(): Promise<number> {
+  return new Promise((resolve, reject) => {
+    setTimeout(function () {
+      console.log("resolve");
+      resolve(1);
+    }, 2000);
+  });
 }
 
 export default createStore({
   state: {
-    todos: []
+    todos: [],
   },
   mutations: {
-    ADDTODO(state:TestState,payload) {
-      state.todos.push(payload)
+    ADDTODO(state: TestState, payload) {
+      state.todos.push(payload);
     },
-    DELETETODO(state,payload) {
-      state.todos.splice(payload,1)
-    }
+    DELETETODO(state, payload) {
+      state.todos.splice(payload, 1);
+    },
   },
   actions: {
-    async addTodo(ctx,payload) {
-      if(!payload) {
-        payload = await delay()
+    async addTodo(ctx, payload) {
+      if (!payload) {
+        payload = await delay();
       }
-      ctx.commit('ADDTODO',payload)
-      return '请求结果'
+      ctx.commit("ADDTODO", payload);
+      return "请求结果";
     },
-    deleteTodo(ctx,payload = 0) {
-      ctx.commit('DELETETOD',payload)
-    }
+    deleteTodo(ctx, payload = 0) {
+      ctx.commit("DELETETOD", payload);
+    },
   },
   getters: {
     todosLen(state) {
-      return state.todos.length
-    }
+      return state.todos.length;
+    },
   },
-  modules: {
-  }
-})
+  modules: {},
+});

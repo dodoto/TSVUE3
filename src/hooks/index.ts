@@ -1,4 +1,4 @@
-import { ref, Ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, Ref, onMounted, onBeforeUnmount, reactive } from "vue";
 
 export function useWindowHeight(): Ref<number> {
   const initHeight = window.innerHeight;
@@ -40,4 +40,14 @@ export const useRequestAnimationFrameThrottle = (
       });
     }
   };
+};
+
+export const useRefArray = <T>() => {
+  const data = ref<T[]>([]);
+  return data;
+};
+
+export const useReactiveArray = <T>() => {
+  const data = reactive([]);
+  return data;
 };
