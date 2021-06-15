@@ -56,6 +56,33 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: "/login",
+    name: "Login",
+    component: () =>
+      import(/* webpackChunkName: "login" */ "../views/Login.vue"),
+    meta: {
+      title: "登入",
+    },
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: () =>
+      import(/* webpackChunkName: "register" */ "../views/Login.vue"),
+    meta: {
+      title: "注册",
+    },
+  },
+  {
+    path: "/reset-password",
+    name: "ResetPassword",
+    component: () =>
+      import(/* webpackChunkName: "reset-password" */ "../views/Login.vue"),
+    meta: {
+      title: "重置密码",
+    },
+  },
+  {
     path: "/:w+",
     name: "404",
     component: NotFound,

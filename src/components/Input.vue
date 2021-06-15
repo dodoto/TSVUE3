@@ -8,11 +8,14 @@
   >
   <div class="custom-input" :style="inputBoxStyle">
     <input
-      type="text"
+      :placeholder="placeholder"
+      :type="type"
       :id="id"
       :style="inputStyle"
       @focus="isFocused = true"
       @blur="isFocused = false"
+      :value="value"
+      @input="handleUpdateValue"
     />
   </div>
 </template>
@@ -46,8 +49,21 @@ export default defineComponent({
       type: String,
       default: "left",
     },
+    type: {
+      type: String,
+      default: "text",
+    },
+    value: {
+      type: String,
+      default: "",
+    },
+    placeholder: {
+      type: String,
+      default: "",
+    },
   },
-  setup(props) {
+  emits: ["update:value"],
+  setup(props, ctx) {
     const id = +new Date() + "";
 
     const isFocused = ref(false);
@@ -60,15 +76,13 @@ export default defineComponent({
         lineHeight: `${height + 2}px`,
         textAlign: `${labelAlign}`,
         fontSize: `${fontSize}px`,
-        color: isFocused.value ? borderColor : "#2c3e50",
+        color: isFocused.value ? borderColor : "#fefefe",
       };
     });
 
     const inputStyle = computed(() => {
       const { borderColor, fontSize, height } = props;
       return {
-        outlineColor: borderColor,
-        borderColor: borderColor,
         caretColor: borderColor,
         height: `${height}px`,
         fontSize: `${fontSize}px`,
@@ -83,6 +97,10 @@ export default defineComponent({
       };
     });
 
+    const handleUpdateValue = (e: Event) => {
+      ctx.emit("update:value", (e.target as HTMLInputElement).value);
+    };
+
     return {
       id,
       isFocused,
@@ -90,6 +108,7 @@ export default defineComponent({
       inputStyle,
       inputBoxStyle,
       ...toRefs(props),
+      handleUpdateValue,
     };
   },
 });
@@ -100,16 +119,20 @@ export default defineComponent({
   float: left;
   color: #2c3e50;
 }
+.custom-input {
+  margin: 20px 0;
+}
 .custom-input > input {
+  box-sizing: border-box;
   outline-width: 0;
   border-width: 1px;
   border-style: solid;
+  border-color: #2c3e50;
   border-radius: 2px;
   padding: 0 4px;
-  color: #2c3e50;
   width: 100%;
 }
 input:focus {
-  outline-width: 1px;
+  border-color: v-bind(borderColor);
 }
 </style>
