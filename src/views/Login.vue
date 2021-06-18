@@ -15,7 +15,6 @@
           :height="38"
           :labelWidth="40"
         />
-        <input type="submit" style="display: none" />
         <Button @click="login" v-if="routeName === 'Login'">登入</Button>
         <Button @click="regist" v-if="routeName !== 'ResetPassword'"
           >注册</Button
@@ -33,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, toRefs, watch } from "vue";
+import { defineComponent, reactive, toRefs, watch } from "vue";
 import { useRouter } from "vue-router";
 import Input from "@/components/Input.vue";
 import Button from "@/components/Button.vue";
@@ -115,7 +114,7 @@ export default defineComponent({
 .form-background::after {
   content: "";
   position: absolute;
-  left: 45%;
+  left: -100%;
   min-width: 300vw;
   min-height: 300vw;
   background-color: #2c3e50;
@@ -125,27 +124,27 @@ export default defineComponent({
 }
 
 .form-background::before {
-  bottom: 15vh;
+  bottom: 25vh;
   border-radius: 45%;
-  animation-duration: 10s;
+  animation-duration: 16s;
 }
 
 .form-background::after {
-  bottom: 12vh;
-  opacity: 0.5;
+  bottom: 22vh;
+  opacity: 0.7;
   border-radius: 47%;
-  animation-duration: 10s;
+  animation-duration: 16s;
 }
 
 @keyframes rotate {
   0% {
-    transform: translate(-50%, 0) rotateZ(0deg);
+    transform: rotateZ(0deg);
   }
   50% {
-    transform: translate(-50%, -2%) rotateZ(180deg);
+    transform: rotateZ(180deg);
   }
   100% {
-    transform: translate(-50%, 0%) rotateZ(360deg);
+    transform: rotateZ(360deg);
   }
 }
 </style>

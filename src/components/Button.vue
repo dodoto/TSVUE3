@@ -35,6 +35,7 @@ button {
 button:active {
   opacity: 0.8;
 }
+button:hover,
 button:focus {
   background-color: #4edc9c;
 }

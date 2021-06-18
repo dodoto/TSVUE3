@@ -126,7 +126,7 @@ export default defineComponent({
   box-sizing: border-box;
   border-width: 2px;
   border-style: solid;
-  border-color: #2c3e50;
+  border-color: #537496;
   border-radius: 2px;
   padding: 0 4px;
   width: 100%;
