@@ -1,4 +1,5 @@
-import { ref, Ref, onMounted, onBeforeUnmount, reactive } from "vue";
+import { ref, Ref, onMounted, onBeforeUnmount, reactive, computed } from "vue";
+import { useRoute } from "vue-router";
 
 export function useWindowHeight(): Ref<number> {
   const initHeight = window.innerHeight;
@@ -48,6 +49,12 @@ export const useRefArray = <T>() => {
 };
 
 export const useReactiveArray = <T>() => {
-  const data = reactive([]);
+  const data = reactive<T[]>([]);
   return data;
+};
+
+export const useRouteName = () => {
+  const route = useRoute();
+  const routeName = computed(() => route.name);
+  return routeName;
 };

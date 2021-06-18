@@ -23,9 +23,9 @@ export default defineComponent({
 <style scoped>
 button {
   outline-width: 0;
-  padding: 8px 20px;
+  border-width: 0;
+  padding: 12px 24px;
   background-color: #42b983;
-  border-color: transparent;
   border-radius: 2px;
   color: #fefefe;
   cursor: pointer;
@@ -34,5 +34,8 @@ button {
 }
 button:active {
   opacity: 0.8;
+}
+button:focus {
+  background-color: #4edc9c;
 }
 </style>

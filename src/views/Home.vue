@@ -48,7 +48,8 @@ export default defineComponent({
           },
         })
         .then((res) => console.log(res))
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err))
+        .finally(() => console.log("请求 graphQl"));
     };
 
     const isChecked = ref(false);

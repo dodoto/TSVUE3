@@ -75,20 +75,43 @@
         >
       </li>
     </ul>
+    <component :is="component" />
+    <IsComponent />
   </div>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
+// import { Options, Vue } from "vue-class-component";
 
-@Options({
+// @Options({
+//   props: {
+//     msg: String,
+//   },
+// })
+// export default class HelloWorld extends Vue {
+//   msg!: string;
+// }
+
+import { defineComponent, toRefs, defineAsyncComponent } from "vue";
+import IsComponent from "@/components/IsComponent.vue";
+export default defineComponent({
+  name: "HelloWorld",
   props: {
     msg: String,
+    component: {
+      type: Object,
+      default: IsComponent,
+    },
   },
-})
-export default class HelloWorld extends Vue {
-  msg!: string;
-}
+  components: {
+    IsComponent: defineAsyncComponent(() => import("./IsComponent.vue")),
+  },
+  setup(props) {
+    return {
+      ...toRefs(props),
+    };
+  },
+});
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

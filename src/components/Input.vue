@@ -76,7 +76,7 @@ export default defineComponent({
         lineHeight: `${height + 2}px`,
         textAlign: `${labelAlign}`,
         fontSize: `${fontSize}px`,
-        color: isFocused.value ? borderColor : "#fefefe",
+        color: isFocused.value ? borderColor : "#537496",
       };
     });
 
@@ -117,15 +117,14 @@ export default defineComponent({
 <style scoped>
 .custom-input-label {
   float: left;
-  color: #2c3e50;
 }
 .custom-input {
   margin: 20px 0;
 }
 .custom-input > input {
-  box-sizing: border-box;
   outline-width: 0;
-  border-width: 1px;
+  box-sizing: border-box;
+  border-width: 2px;
   border-style: solid;
   border-color: #2c3e50;
   border-radius: 2px;
