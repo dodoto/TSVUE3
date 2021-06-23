@@ -8,6 +8,9 @@
     <div style="width: 500px; margin: auto">
       <Input :height="50" :fontSize="20" label="测试" />
     </div>
+    <div style="width: 200px; margin: auto">
+      <Button @click="tip">click to alert tip</Button>
+    </div>
   </div>
 </template>
 
@@ -17,6 +20,8 @@ import HelloWorld from "@/components/HelloWorld.vue";
 import Switch from "@/components/Switch.vue";
 import StarRate from "@/components/StarRate.vue";
 import Input from "@/components/Input.vue";
+import Button from "@/components/Button.vue";
+import { _tip } from "@/components/Tips/Tips";
 import {
   computed,
   defineComponent,
@@ -33,6 +38,7 @@ export default defineComponent({
     Switch,
     StarRate,
     Input,
+    Button,
   },
   setup() {
     const instance = getCurrentInstance();
@@ -79,6 +85,8 @@ export default defineComponent({
       console.log(`当前评分${value}`);
     };
 
+    const tip = () => _tip();
+
     onMounted(() => {
       toggle(true);
       graphQLTest();
@@ -89,6 +97,7 @@ export default defineComponent({
       toggle,
       len,
       rateChange,
+      tip,
     };
   },
 });
