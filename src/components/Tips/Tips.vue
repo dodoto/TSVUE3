@@ -1,5 +1,5 @@
 <template>
-  <transition name="fade" @after-leave="close">
+  <transition name="fade" @after-leave="$emit('dismiss')">
     <div class="custom-tip" @click.stop="visible = false" v-show="visible">
       {{ msg }}
     </div>
@@ -7,9 +7,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, computed } from "vue";
+import {
+  defineComponent,
+  onMounted,
+  ref,
+  computed,
+  onBeforeUnmount,
+} from "vue";
 
 export default defineComponent({
+  emits: ["dismiss"],
   props: {
     message: {
       type: String,
@@ -19,18 +26,16 @@ export default defineComponent({
       type: Number,
       default: 2,
     },
-    close: {
-      type: Function,
-      required: true,
-    },
   },
   setup(props) {
     const visible = ref(false);
 
-    const autoClose = () => {
+    let timer: null | number = null;
+
+    const autoDismiss = () => {
       const { duration } = props;
       if (duration > 0) {
-        setTimeout(() => {
+        timer = setTimeout(() => {
           visible.value = false;
         }, duration * 1000);
       }
@@ -40,7 +45,11 @@ export default defineComponent({
 
     onMounted(() => {
       visible.value = true;
-      autoClose();
+      autoDismiss();
+    });
+
+    onBeforeUnmount(() => {
+      if (timer) clearTimeout(timer);
     });
 
     return {
@@ -57,12 +66,12 @@ export default defineComponent({
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 0 20px;
+  padding: 0 40px;
   border-radius: 4px;
   background-color: #e85b51;
   color: #fff;
-  height: 40px;
-  line-height: 40px;
+  height: 45px;
+  line-height: 45px;
   text-align: center;
 }
 .fade-leave-active,

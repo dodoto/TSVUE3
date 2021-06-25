@@ -6,7 +6,12 @@
     {{ len }}
     <StarRate @change="rateChange" />
     <div style="width: 500px; margin: auto">
-      <Input :height="50" :fontSize="20" label="测试" />
+      <Input
+        :height="50"
+        :fontSize="16"
+        label="测试"
+        v-model:value="testText"
+      />
     </div>
     <div style="width: 200px; margin: auto">
       <Button @click="tip">click to alert tip</Button>
@@ -41,9 +46,13 @@ export default defineComponent({
     Button,
   },
   setup() {
+    const testText = ref("输入然后点击提示");
+
     const instance = getCurrentInstance();
 
     const axios = instance?.proxy?.$axios;
+
+    const secondtip = instance?.proxy?.$tip!;
 
     const graphQLTest = () => {
       axios
@@ -54,8 +63,9 @@ export default defineComponent({
           },
         })
         .then((res) => console.log(res))
-        .catch((err) => console.log(err))
-        .finally(() => console.log("请求 graphQl"));
+        .catch((err) => {
+          console.log(err["isAxiosError"]);
+        });
     };
 
     const isChecked = ref(false);
@@ -85,7 +95,8 @@ export default defineComponent({
       console.log(`当前评分${value}`);
     };
 
-    const tip = () => _tip();
+    // const tip = () => _tip(testText.value);
+    const tip = () => secondtip(testText.value);
 
     onMounted(() => {
       toggle(true);
@@ -98,6 +109,7 @@ export default defineComponent({
       len,
       rateChange,
       tip,
+      testText,
     };
   },
 });
