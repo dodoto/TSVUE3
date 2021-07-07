@@ -1,8 +1,8 @@
 import { createVNode, render } from "vue";
 import Tips from "./Tips.vue";
-import { SFCWithInstall } from "@/utils/type";
+import { GlobalPropertiesInstall } from "@/utils/type";
 
-export const _tip = (message?: string, duration?: number) => {
+export const tip = (message?: string, duration?: number): void => {
   const container = document.createElement("div");
   const vm = createVNode(Tips, {
     message,
@@ -13,14 +13,10 @@ export const _tip = (message?: string, duration?: number) => {
   document.body.appendChild(container.firstChild as Element);
 };
 
-const TipsPlugin: SFCWithInstall<typeof Tips> = Tips as SFCWithInstall<
-  typeof Tips
->;
-
-TipsPlugin.install = (app) => {
-  app.config.globalProperties.$tip = _tip;
+const TipsPlugin: GlobalPropertiesInstall = {
+  install: (app) => {
+    app.config.globalProperties.$tip = tip;
+  },
 };
-
-export type TipsType = (message: string, duration: number) => void;
 
 export default TipsPlugin;

@@ -2,7 +2,7 @@
 
 import { App } from "vue";
 import axios from "axios";
-import { _tip } from "../components/Tips/Tips";
+import { tip } from "../components/Tips/Tips";
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -50,7 +50,7 @@ _axios.interceptors.response.use(
   },
   function (error) {
     // Do something with response error
-    _tip("服务器没开");
+    tip("服务器没开");
     return Promise.reject(error);
   }
 );

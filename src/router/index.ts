@@ -83,6 +83,15 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: "/upload",
+    name: "Upload",
+    component: () =>
+      import(/* webpackChunkName: "upload" */ "../views/Upload.vue"),
+    meta: {
+      title: "上传",
+    },
+  },
+  {
     path: "/:w+",
     name: "404",
     component: NotFound,

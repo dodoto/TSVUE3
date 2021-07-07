@@ -26,7 +26,7 @@ import Switch from "@/components/Switch.vue";
 import StarRate from "@/components/StarRate.vue";
 import Input from "@/components/Input.vue";
 import Button from "@/components/Button.vue";
-import { _tip } from "@/components/Tips/Tips";
+import { tip } from "@/components/Tips/Tips";
 import {
   computed,
   defineComponent,
@@ -95,7 +95,7 @@ export default defineComponent({
       console.log(`当前评分${value}`);
     };
 
-    // const tip = () => _tip(testText.value);
+    // const tip = () => tip(testText.value);
     const tip = () => secondtip(testText.value);
 
     onMounted(() => {
