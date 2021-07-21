@@ -17,7 +17,7 @@ const env = process.env.NODE_ENV;
 // }
 
 const CANCEL_TOEKN = axios.CancelToken;
-
+//自定义headers会导致 preflight , jikan-api 对 options 返回400错误导致实际 get 请求跨域报错
 const config = {
   baseURL: process.env.BASE_URL,
   headers: {
@@ -32,6 +32,7 @@ const _axios = axios.create(config);
 
 _axios.interceptors.request.use(
   function (config) {
+    // console.log(config)
     // Do something before request is sent
     return config;
   },

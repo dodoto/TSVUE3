@@ -92,6 +92,17 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: "/animate-schedule",
+    name: "AnimateSchedule",
+    component: () =>
+      import(
+        /* webpackChunkName: "animate-schedule" */ "../views/AnimateSchedule.vue"
+      ),
+    meta: {
+      title: "新番放送",
+    },
+  },
+  {
     path: "/:w+",
     name: "404",
     component: NotFound,
