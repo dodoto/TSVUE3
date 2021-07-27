@@ -103,6 +103,17 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: "/transition-grid",
+    name: "TransitionGrid",
+    component: () =>
+      import(
+        /* webpackChunkName: "transition-grid" */ "../views/Transition.vue"
+      ),
+    meta: {
+      title: "过渡测试",
+    },
+  },
+  {
     path: "/:w+",
     name: "404",
     component: NotFound,
