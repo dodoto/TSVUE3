@@ -58,10 +58,18 @@ interface IAnimateSchedule {
   [key: string]: any;
 }
 
-import { computed, defineComponent, onMounted, ref } from "vue";
-import { GET } from "@/plugins/axios";
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  ref,
+  onBeforeUnmount,
+} from "vue";
+import { GET, CANCEL_TOEKN } from "@/plugins/axios";
 export default defineComponent({
   setup() {
+    const source = CANCEL_TOEKN.source();
+
     const schedule = ref<IAnimateSchedule>({});
 
     const currentDay = ref("");
@@ -100,7 +108,11 @@ export default defineComponent({
     const currentList = computed(() => schedule.value[currentDay.value]);
 
     const getSchedule = async () => {
-      let res: IAnimateSchedule = await GET("/jikan/schedule");
+      let res: IAnimateSchedule = await GET(
+        "/jikan/schedule",
+        undefined,
+        source.token
+      );
       let data: IAnimateSchedule = {};
       const keys = [
         "monday",
@@ -137,6 +149,10 @@ export default defineComponent({
     onMounted(() => {
       getSchedule();
       getCurrentDay();
+    });
+
+    onBeforeUnmount(() => {
+      source.cancel("cancel");
     });
 
     return {

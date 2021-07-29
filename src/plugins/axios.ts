@@ -1,7 +1,7 @@
 "use strict";
 
 import { App } from "vue";
-import axios from "axios";
+import axios, { CancelToken } from "axios";
 import { tip } from "../components/Tips/Tips";
 
 // Full config:  https://github.com/axios/axios#request-config
@@ -16,7 +16,11 @@ const env = process.env.NODE_ENV;
 //   baseURL = 'xxxx'
 // }
 
-const CANCEL_TOEKN = axios.CancelToken;
+export const CANCEL_TOEKN = axios.CancelToken;
+// another usage:
+// const source = CANCEL_TOEKN.source()
+// cancelToken: source.token
+//source.cancel()
 //自定义headers会导致 preflight , jikan-api 对 options 返回400错误导致实际 get 请求跨域报错
 const config = {
   baseURL: process.env.BASE_URL,
@@ -25,6 +29,7 @@ const config = {
   },
   timeout: 10 * 1000, // Timeout
   //cancelToken: new CANCEL_TOEKN(c => console.log(c))   //里面的c是该请求的cancel函数,执行后进入请求的error
+  // cancelToken: source.token
   // withCredentials: true, // Check cross-site Access-Control
 };
 
@@ -34,6 +39,7 @@ _axios.interceptors.request.use(
   function (config) {
     // console.log(config)
     // Do something before request is sent
+    // source.cancel()
     return config;
   },
   function (error) {
@@ -57,20 +63,23 @@ _axios.interceptors.response.use(
 );
 
 /**GET */
-export function GET(url: string, params?: object) {
+export function GET(url: string, params?: object, token?: CancelToken) {
   return new Promise<any>((resolve, reject) => {
     _axios
-      .get(url, params)
+      .get(url, {
+        params,
+        cancelToken: token,
+      })
       .then((res) => resolve(res.data))
       .catch((err) => reject(err));
   });
 }
 
 /**POST */
-export function POST(url: string, data?: object) {
+export function POST(url: string, data?: object, token?: CancelToken) {
   return new Promise<any>((resolve, reject): any => {
     _axios
-      .post(url, data)
+      .post(url, data, { cancelToken: token })
       .then((res: any) => resolve(res))
       .catch((err: any) => reject(err));
   });
@@ -83,3 +92,9 @@ const axiosPlugin = {
 };
 
 export default axiosPlugin;
+
+export type MyRequest = (
+  url: string,
+  data?: object,
+  token?: CancelToken
+) => Promise<any>;

@@ -3,14 +3,12 @@ import Tips from "./Tips.vue";
 import { GlobalPropertiesInstall } from "@/utils/type";
 
 export const tip = (message?: string, duration?: number): void => {
-  const container = document.createElement("div");
   const vm = createVNode(Tips, {
     message,
     duration,
-    onDismiss: () => render(null, container),
+    onDismiss: () => render(null, document.body),
   });
-  render(vm, container);
-  document.body.appendChild(container.firstChild as Element);
+  render(vm, document.body);
 };
 
 const TipsPlugin: GlobalPropertiesInstall = {
